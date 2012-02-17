@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Drawing;
+using Microsoft.Win32;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Collections.Specialized;
@@ -13,21 +14,69 @@ namespace Scroto
   {
     static private string apiKey = "54bf7d24bb8f12f638f40c41abcd65ee";
     static private Regex ImageRe = new Regex("<original_image>(.*)</original_image>");
+    bool forceClose = false;
+    private Pair<bool, FormWindowState> prev = new Pair<bool, FormWindowState>();
 
     public Scroto()
     {
       InitializeComponent();
     }
 
+    protected override void OnFormClosing(FormClosingEventArgs e)
+    {
+      base.OnFormClosing(e);
+
+      if (e.CloseReason == CloseReason.WindowsShutDown ||
+        forceClose) return;
+
+      Hide();
+      e.Cancel = true;
+    }
+
+    protected void ForceClose()
+    {
+      forceClose = true;
+      Close();
+    }
+
+    private void Scroto_Resize(object sender, EventArgs e)
+    {
+      if (WindowState == FormWindowState.Minimized)
+        Hide();
+    }
+
+    private void esciToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      ForceClose();
+    }
+
+    private void shootToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      Shoot();
+    }
+
+    private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
+    {
+      if (e.Button != System.Windows.Forms.MouseButtons.Left) return;
+
+      if (Visible)
+        Hide();
+      else
+        Show();
+    }
+
     protected override void WndProc(ref Message m)
     {
       if (m.Msg == NativeMethods.WM_SHOWME)
-        ShowMe();
+        Show();
       base.WndProc(ref m);
     }
 
-    private void ShowMe()
+    public new void Show()
     {
+      if (!Visible)
+        base.Show();
+
       if (WindowState == FormWindowState.Minimized)
         WindowState = FormWindowState.Normal;
 
@@ -36,22 +85,52 @@ namespace Scroto
       TopMost = top;
     }
 
+    private static string GetDefaultBrowserPath()
+    {
+      string key = @"htmlfile\shell\open\command";
+      RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey(key, false);
+      return ((string)registryKey.GetValue(null, null)).Split('"')[1];
+    }
+
     private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-      System.Diagnostics.Process.Start(e.Link.LinkData.ToString());
+      try
+      {
+        System.Diagnostics.Process.Start(e.Link.LinkData.ToString());
+      }
+      catch (Exception e1)
+      {
+        if (e1.GetType().ToString() != "System.ComponentModel.Win32Exception")
+        {
+          try
+          {
+            System.Diagnostics.Process.Start(GetDefaultBrowserPath(), e.Link.LinkData.ToString());
+          }
+          catch { }
+        }
+      }
     }
 
     private void button1_Click(object sender, EventArgs e)
     {
-      WindowState = FormWindowState.Minimized;
+      Shoot();
+    }
+
+    private void Shoot()
+    {
+      prev.First = Visible;
+      prev.Second = WindowState;
+
+      Hide();
       linkLabel1.Hide();
+
       try
       {
         UploadToImgur();
       }
       catch (Exception)
       {
-        WindowState = FormWindowState.Normal;
+        Show();
         MessageBox.Show("Errore durante l'upload dell'immagine",
           "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
       }
@@ -77,7 +156,17 @@ namespace Scroto
       linkLabel1.Links.Add(0, imgUrl.Length, imgUrl);
       linkLabel1.Show();
       Clipboard.SetText(imgUrl);
-      WindowState = FormWindowState.Normal;
+      
+      if (prev.First)
+      {
+        Show();
+        WindowState = prev.Second;
+      }
+      else
+      {
+        notifyIcon1.ShowBalloonTip(5000, "Scroto",
+          "Screenshot at " + imgUrl, ToolTipIcon.Info);
+      }
     }
 
     private byte[] TakeScreenshot()
