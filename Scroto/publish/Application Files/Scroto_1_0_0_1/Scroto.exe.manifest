@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1">
+  <asmv1:assemblyIdentity name="Scroto.exe" version="1.0.0.1" publicKeyToken="a38e8637c33108c1" language="neutral" processorArchitecture="x86" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Scroto" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+    <commandLine file="Scroto.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the 
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward 
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Scroto.exe" size="13312">
+      <assemblyIdentity name="Scroto" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>4exkzyz2dxW1ohmZ++dtYuCGGWc=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Scroto.exe.config" size="144">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>cpzNzlRjZspwKGLNlX6RAlU3880=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=shura7\shura" issuerKeyHash="b860c6b2a2ea1e804491a1363dc5b7deb5cbfb2e" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>3o3tdH3kyVxXeS6gO5tBwCS0xuY=</DigestValue></Reference></SignedInfo><SignatureValue>ZyDJBJ1fQYDYxRvkXXuOdVFIo5YfQi7kJ33dSSjMd816/xBisFRtmUI87xcLX48Cl/pYyCVENtmye7oEagdKT/7SIyZGpLmAvcbAbnikG1nJq+xi/ik9glZnTJphhp6OGeIuO/B2g0zPLl+iK2vkNV8OiOeMkNeR3zv7kFezcdY=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>o5EGQE0nBkhd/zPPGYTgDlxk0xD3yF+Ujzp7seJnrulcoMoUeCbQcLRqoJFzivAQDdc0DjvBU3R9EUyDgZLYgWbK+BuPkNC7OnLaV9140pFCYhQvlDfMzIMQ04MGa8fS5yOEBX8m0zH3chv2mtjLHWXgElwWbPrSnvDSVg6xGEU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="e6c6b424c0419b3ba02e79575cc9e47d74ed8dde" Description="" Url=""><as:assemblyIdentity name="Scroto.exe" version="1.0.0.1" publicKeyToken="a38e8637c33108c1" language="neutral" processorArchitecture="x86" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=shura7\shura</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>S0LrDgbH5fGcFDkVwo8hoUlsyFE=</DigestValue></Reference></SignedInfo><SignatureValue>OdRm/1vvASU2Wp9Y0iIDYNtxUHK/SxBoemfTT/28hl0qsnIo4w+Eu5kQwTJyO9J+r5lr4KbbC/C+JEE6k7Qs87oXJQesB3qoU/EUOpu11KY2pKVoY228RvKzJSk+etBYm/nmHs/kXuq4hwhz8308I6ymBFx8EJp86V4dGcJdtAI=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>o5EGQE0nBkhd/zPPGYTgDlxk0xD3yF+Ujzp7seJnrulcoMoUeCbQcLRqoJFzivAQDdc0DjvBU3R9EUyDgZLYgWbK+BuPkNC7OnLaV9140pFCYhQvlDfMzIMQ04MGa8fS5yOEBX8m0zH3chv2mtjLHWXgElwWbPrSnvDSVg6xGEU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIByTCCATKgAwIBAgIQTAuB8cJhQ6FC1QzrrM0eUjANBgkqhkiG9w0BAQUFADAjMSEwHwYDVQQDHhgAcwBoAHUAcgBhADcAXABzAGgAdQByAGEwHhcNMTIwMjE3MDQyNjQ1WhcNMTMwMjE2MTAyNjQ1WjAjMSEwHwYDVQQDHhgAcwBoAHUAcgBhADcAXABzAGgAdQByAGEwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAKORBkBNJwZIXf8zzxmE4A5cZNMQ98hflI86e7HiZ67pXKDKFHgm0HC0aqCRc4rwEA3XNA47wVN0fRFMg4GS2IFmyvgbj5DQuzpy2lfdeNKRQmIUL5Q3zMyDENODBmvH0ucjhAV/JtMx93Ib9prYyx1l4BJcFmz60p7w0lYOsRhFAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAM2Bkbv6RRZ9h1W9paW6HvKYuFgsaNxKT4M/CURyJJZR39mFUYH5mzd6Ov+NqtBR++WdUa0RA2gJHHZEoZOIQ1FHRWXRBPlnZ67AqO99HJIpKD4YhIJH5c4CwQM8S8fmUXWbPpBXhcjdcfEj5wrbmEPQ7p7+o9VJCvlLhnPcFaeM=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
