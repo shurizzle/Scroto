@@ -5,7 +5,6 @@ using System.Linq;
 using System.Drawing;
 using Microsoft.Win32;
 using System.Windows.Forms;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
@@ -175,7 +174,6 @@ namespace Scroto
     {
       Size sz = new Size(Screen.AllScreens.Select(x => x.Bounds.X + x.Bounds.Width).Max(),
         Screen.AllScreens.Select(x => x.Bounds.Y + x.Bounds.Height).Max());
-      //Size sz = Screen.PrimaryScreen.Bounds.Size;
       IntPtr hDesk = GetDesktopWindow();
       IntPtr hSrce = GetWindowDC(hDesk);
       IntPtr hDest = CreateCompatibleDC(hSrce);
