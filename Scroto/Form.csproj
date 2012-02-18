@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Pair.cs" />
+    <Compile Include="ProcessHelpers.cs" />
     <Compile Include="Scroto.cs">
       <SubType>Form</SubType>
     </Compile>
