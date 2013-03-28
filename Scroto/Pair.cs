@@ -14,6 +14,7 @@ namespace Scroto
     public Pair(T first, U second)
     {
       First = first;
+      Second = second;
     }
   }
 }

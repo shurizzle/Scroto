@@ -13,14 +13,14 @@ namespace Scroto
       {
         _id = id;
 
-        NativeMethods.EnumWindowsProc ewp = new NativeMethods.EnumWindowsProc(Check);
-        NativeMethods.EnumWindows(ewp, 0);
+        Native.EnumWindowsProc ewp = new Native.EnumWindowsProc(Check);
+        Native.EnumWindows(ewp, 0);
       }
 
       private bool Check(int hWnd, int lParam)
       {
         uint pid = 0;
-        NativeMethods.GetWindowThreadProcessId(new IntPtr(hWnd), out pid);
+        Native.GetWindowThreadProcessId(new IntPtr(hWnd), out pid);
 
         if (pid == _id)
         {
@@ -39,23 +39,23 @@ namespace Scroto
 
     static public bool IsVisible(this System.Diagnostics.Process proc)
     {
-      NativeMethods.WINDOWINFO pwi = new NativeMethods.WINDOWINFO();
+      Native.WINDOWINFO pwi = new Native.WINDOWINFO();
       IntPtr handle = proc.MainWindowHandle;
-      return NativeMethods.GetWindowInfo(handle, ref pwi);
+      return Native.GetWindowInfo(handle, ref pwi);
     }
 
     static public void Show(this System.Diagnostics.Process proc)
     {
       if (!proc.IsVisible())
-        NativeMethods.ShowWindow(proc.GetWindowHandle(), NativeMethods.SW_SHOW);
+        Native.ShowWindow(proc.GetWindowHandle(), Native.SW_SHOW);
 
-      NativeMethods.PostMessage(
+      Native.PostMessage(
         proc.MainWindowHandle,
-        NativeMethods.WM_SHOWME,
+        Native.WM_SHOWME,
         IntPtr.Zero,
         IntPtr.Zero);
 
-      NativeMethods.SetForegroundWindow(proc.MainWindowHandle);
+      Native.SetForegroundWindow(proc.MainWindowHandle);
     }
   }
 

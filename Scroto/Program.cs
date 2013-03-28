@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using Application = System.Windows.Forms.Application;
 using Mutex = System.Threading.Mutex;
 
