@@ -362,17 +362,17 @@ namespace Scroto
     {
       Size sz = new Size(Screen.AllScreens.Select(x => x.Bounds.X + x.Bounds.Width).Max(),
         Screen.AllScreens.Select(x => x.Bounds.Y + x.Bounds.Height).Max());
-      IntPtr hDesk = GetDesktopWindow();
-      IntPtr hSrce = GetWindowDC(hDesk);
-      IntPtr hDest = CreateCompatibleDC(hSrce);
-      IntPtr hBmp = CreateCompatibleBitmap(hSrce, sz.Width, sz.Height);
-      IntPtr hOldBmp = SelectObject(hDest, hBmp);
-      BitBlt(hDest, 0, 0, sz.Width, sz.Height, hSrce, 0, 0, CopyPixelOperation.SourceCopy | CopyPixelOperation.CaptureBlt);
+      IntPtr hDesk = Native.GetDesktopWindow();
+      IntPtr hSrce = Native.GetWindowDC(hDesk);
+      IntPtr hDest = Native.CreateCompatibleDC(hSrce);
+      IntPtr hBmp = Native.CreateCompatibleBitmap(hSrce, sz.Width, sz.Height);
+      IntPtr hOldBmp = Native.SelectObject(hDest, hBmp);
+      Native.BitBlt(hDest, 0, 0, sz.Width, sz.Height, hSrce, 0, 0, CopyPixelOperation.SourceCopy | CopyPixelOperation.CaptureBlt);
       Bitmap img = Bitmap.FromHbitmap(hBmp);
-      SelectObject(hDest, hOldBmp);
-      DeleteObject(hBmp);
-      DeleteDC(hDest);
-      ReleaseDC(hDesk, hSrce);
+      Native.SelectObject(hDest, hOldBmp);
+      Native.DeleteObject(hBmp);
+      Native.DeleteDC(hDest);
+      Native.ReleaseDC(hDesk, hSrce);
 
       if (!(crop.X == 0 && crop.Y == 0 && crop.Height == sz.Height && crop.Width == sz.Width))
       {
@@ -403,26 +403,6 @@ namespace Scroto
     {
       return TakeScreenshot(Screen.AllScreens[screen].WorkingArea);
     }
-
-    [DllImport("gdi32.dll")]
-    static extern bool BitBlt(IntPtr hdcDest, int xDest, int yDest, int wDest,
-      int hDest, IntPtr hdcSource, int xSrc, int ySrc, CopyPixelOperation rop);
-    [DllImport("user32.dll")]
-    static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDc);
-    [DllImport("gdi32.dll")]
-    static extern IntPtr DeleteDC(IntPtr hDc);
-    [DllImport("gdi32.dll")]
-    static extern IntPtr DeleteObject(IntPtr hDc);
-    [DllImport("gdi32.dll")]
-    static extern IntPtr CreateCompatibleBitmap(IntPtr hdc, int nWidth, int nHeight);
-    [DllImport("gdi32.dll")]
-    static extern IntPtr CreateCompatibleDC(IntPtr hdc);
-    [DllImport("gdi32.dll")]
-    static extern IntPtr SelectObject(IntPtr hdc, IntPtr bmp);
-    [DllImport("user32.dll")]
-    public static extern IntPtr GetDesktopWindow();
-    [DllImport("user32.dll")]
-    public static extern IntPtr GetWindowDC(IntPtr ptr);
 
     private void windowToolStripMenuItem_Click(object sender, EventArgs e)
     {
