@@ -234,7 +234,7 @@ namespace Scroto
       {
         yield return cur;
 
-        while ((cur = Native.GetWindow(cur, Native.GW_HWNDNEXT)) != IntPtr.Zero)
+        while ((cur = Native.GetWindow(cur, Native.GetWindow_Cmd.GW_HWNDNEXT)) != IntPtr.Zero)
         {
           yield return cur;
         }
@@ -245,15 +245,14 @@ namespace Scroto
     {
       List<IntPtr> visibleWindows = new List<IntPtr>();
 
-      Native.EnumWindows(delegate(int _hWnd, int lParam)
+      Native.EnumWindows(delegate(IntPtr hWnd, IntPtr lParam)
       {
-        IntPtr hWnd = new IntPtr(_hWnd);
         if (Native.IsWindowVisible(hWnd))
         {
           visibleWindows.Add(hWnd);
         }
         return true;
-      }, 0);
+      }, IntPtr.Zero);
 
       foreach (var hWnd in ZOrder())
       {
@@ -274,13 +273,13 @@ namespace Scroto
       {
         Native.AttachThreadInput(foreThread, appThread, true);
         Native.BringWindowToTop(hWnd);
-        Native.ShowWindow(hWnd, Native.SW_SHOW);
+        Native.ShowWindow(hWnd, Native.ShowWindowCommands.Show);
         Native.AttachThreadInput(foreThread, appThread, false);
       }
       else
       {
         Native.BringWindowToTop(hWnd);
-        Native.ShowWindow(hWnd, Native.SW_SHOW);
+        Native.ShowWindow(hWnd, Native.ShowWindowCommands.Show);
       }
     }
 

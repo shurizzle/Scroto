@@ -1,40 +1,28 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Scroto
 {
   public static class ProcessHelpers
   {
-    class _GetWindow
+    static public IntPtr GetWindowHandle(this System.Diagnostics.Process proc)
     {
-      public IntPtr Result { get; set; }
-      private uint _id = 0;
-
-      public _GetWindow(uint id)
-      {
-        _id = id;
-
-        Native.EnumWindowsProc ewp = new Native.EnumWindowsProc(Check);
-        Native.EnumWindows(ewp, 0);
-      }
-
-      private bool Check(int hWnd, int lParam)
+      IntPtr res = IntPtr.Zero;
+      Native.EnumWindows(delegate(IntPtr hWnd, IntPtr lParam)
       {
         uint pid = 0;
-        Native.GetWindowThreadProcessId(new IntPtr(hWnd), out pid);
+        Native.GetWindowThreadProcessId(hWnd, out pid);
 
-        if (pid == _id)
+        if (pid == proc.Id)
         {
-          Result = new IntPtr(hWnd);
+          res = hWnd;
           return false;
         }
 
         return true;
-      }
-    }
+      }, IntPtr.Zero);
 
-    static public IntPtr GetWindowHandle(this System.Diagnostics.Process proc)
-    {
-      return (new _GetWindow((uint)proc.Id)).Result;
+      return res;
     }
 
     static public bool IsVisible(this System.Diagnostics.Process proc)
@@ -47,10 +35,10 @@ namespace Scroto
     static public void Show(this System.Diagnostics.Process proc)
     {
       if (!proc.IsVisible())
-        Native.ShowWindow(proc.GetWindowHandle(), Native.SW_SHOW);
+        Native.ShowWindow(proc.GetWindowHandle(), Native.ShowWindowCommands.Show);
 
       Native.PostMessage(
-        proc.MainWindowHandle,
+        new HandleRef(proc, proc.MainWindowHandle),
         Native.WM_SHOWME,
         IntPtr.Zero,
         IntPtr.Zero);

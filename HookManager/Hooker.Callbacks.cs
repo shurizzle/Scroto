@@ -11,16 +11,16 @@ namespace HookManager
 {
   public static partial class Hooker
   {
-    public delegate int HookProc(int nCode, int wParam, IntPtr lParam);
+    public delegate IntPtr HookProc(int nCode, WM wParam, IntPtr lParam);
 
     #region Mouse things
     private static HookProc s_MouseDelegate;
-    private static int s_MouseHookHandle;
+    private static IntPtr s_MouseHookHandle;
 
     private static int m_OldX;
     private static int m_OldY;
 
-    private static int MouseHookProc(int nCode, int wParam, IntPtr lParam)
+    private static IntPtr MouseHookProc(int nCode, WM wParam, IntPtr lParam)
     {
       if (nCode >= 0)
       {
@@ -36,35 +36,35 @@ namespace HookManager
 
         switch (wParam)
         {
-          case WM_LBUTTONDOWN:
+          case WM.LBUTTONDOWN:
             mouseDown = true;
             button = MouseButtons.Left;
             clickCount = 1;
             break;
-          case WM_LBUTTONUP:
+          case WM.LBUTTONUP:
             mouseUp = true;
             button = MouseButtons.Left;
             clickCount = 1;
             break;
-          case WM_MBUTTONDBLCLK:
+          case WM.MBUTTONDBLCLK:
             button = MouseButtons.Left;
             clickCount = 2;
             break;
-          case WM_RBUTTONDOWN:
+          case WM.RBUTTONDOWN:
             mouseDown = true;
             button = MouseButtons.Right;
             clickCount = 1;
             break;
-          case WM_RBUTTONUP:
+          case WM.RBUTTONUP:
             mouseUp = true;
             button = MouseButtons.Right;
             clickCount = 1;
             break;
-          case WM_RBUTTONDBLCLK:
+          case WM.RBUTTONDBLCLK:
             button = MouseButtons.Right;
             clickCount = 2;
             break;
-          case WM_MOUSEWHEEL:
+          case WM.MOUSEWHEEL:
             mouseDelta = (short) ((mouseHookStruct.mouseData >> 16) & 0xffff);
             break;
         }
@@ -142,7 +142,7 @@ namespace HookManager
 
         if (e.Handled)
         {
-          return -1;
+          return new IntPtr(-1);
         }
       }
 
@@ -151,14 +151,14 @@ namespace HookManager
 
     private static void SubscribeGlobalMouseEvents()
     {
-      if (s_MouseHookHandle == 0)
+      if (s_MouseHookHandle == IntPtr.Zero)
       {
         s_MouseDelegate = MouseHookProc;
-        s_MouseHookHandle = SetWindowsHookEx(WH_MOUSE_LL, s_MouseDelegate,
-          System.Diagnostics.Process.GetCurrentProcess().MainModule.BaseAddress.ToInt32(),
+        s_MouseHookHandle = SetWindowsHookEx(HookType.WH_MOUSE_LL, s_MouseDelegate,
+          System.Diagnostics.Process.GetCurrentProcess().MainModule.BaseAddress,
           0);
 
-        if (s_MouseHookHandle == 0)
+        if (s_MouseHookHandle == IntPtr.Zero)
         {
           int errCode = Marshal.GetLastWin32Error();
           throw new Win32Exception(errCode);
@@ -178,13 +178,13 @@ namespace HookManager
         s_MouseWheelEx == null &&
         s_MouseMove == null &&
         s_MouseMoveEx == null &&
-        s_MouseHookHandle != 0)
+        s_MouseHookHandle != IntPtr.Zero)
       {
-        int result = UnhookWindowsHookEx(s_MouseHookHandle);
-        s_MouseHookHandle = 0;
+        bool result = UnhookWindowsHookEx(s_MouseHookHandle);
+        s_MouseHookHandle = IntPtr.Zero;
         s_MouseDelegate = null;
 
-        if (result == 0)
+        if (!result)
         {
           int errCode = Marshal.GetLastWin32Error();
           throw new Win32Exception(errCode);
@@ -195,9 +195,9 @@ namespace HookManager
 
     #region Keyboard things
     private static HookProc s_KeyboardDelegate;
-    private static int s_KeyboardHookHandle;
+    private static IntPtr s_KeyboardHookHandle;
 
-    private static int KeyboardHookProc(int nCode, Int32 wParam, IntPtr lParam)
+    private static IntPtr KeyboardHookProc(int nCode, WM wParam, IntPtr lParam)
     {
       bool handled = false;
 
@@ -208,15 +208,15 @@ namespace HookManager
         Keys keyData = (Keys)kbHookStruct.vkCode;
         KeyEventArgs e = new KeyEventArgs(keyData);
 
-        if (s_KeyDown != null && (wParam == WM_KEYDOWN ||
-            wParam == WM_SYSKEYDOWN))
+        if (s_KeyDown != null && (wParam == WM.KEYDOWN ||
+            wParam == WM.SYSKEYDOWN))
         {
           s_KeyDown.Invoke(null, e);
           handled = e.Handled;
         }
 
-        if (s_KeyUp != null && (wParam == WM_KEYUP ||
-            wParam == WM_SYSKEYUP))
+        if (s_KeyUp != null && (wParam == WM.KEYUP ||
+            wParam == WM.SYSKEYUP))
         {
           s_KeyUp.Invoke(null, e);
           handled = e.Handled;
@@ -224,7 +224,7 @@ namespace HookManager
 
         if (handled)
         {
-          return -1;
+          return new IntPtr(-1);
         }
       }
 
@@ -233,14 +233,14 @@ namespace HookManager
 
     private static void SubscribeGlobalKeyboardEvents()
     {
-      if (s_KeyboardHookHandle == 0)
+      if (s_KeyboardHookHandle == IntPtr.Zero)
       {
         s_KeyboardDelegate = KeyboardHookProc;
-        s_KeyboardHookHandle = SetWindowsHookEx(WH_KEYBOARD_LL, s_KeyboardDelegate,
-          System.Diagnostics.Process.GetCurrentProcess().MainModule.BaseAddress.ToInt32(),
+        s_KeyboardHookHandle = SetWindowsHookEx(HookType.WH_KEYBOARD_LL, s_KeyboardDelegate,
+          System.Diagnostics.Process.GetCurrentProcess().MainModule.BaseAddress,
           0);
 
-        if (s_KeyboardHookHandle == 0)
+        if (s_KeyboardHookHandle == IntPtr.Zero)
         {
           int errCode = Marshal.GetLastWin32Error();
           throw new Win32Exception(errCode);
@@ -252,13 +252,13 @@ namespace HookManager
     {
       if (s_KeyDown == null &&
         s_KeyUp == null &&
-        s_KeyboardHookHandle != 0)
+        s_KeyboardHookHandle != IntPtr.Zero)
       {
-        int res = UnhookWindowsHookEx(s_KeyboardHookHandle);
-        s_KeyboardHookHandle = 0;
+        bool res = UnhookWindowsHookEx(s_KeyboardHookHandle);
+        s_KeyboardHookHandle = IntPtr.Zero;
         s_KeyboardDelegate = null;
 
-        if (res == 0)
+        if (!res)
         {
           int errCode = Marshal.GetLastWin32Error();
           throw new Win32Exception(errCode);
