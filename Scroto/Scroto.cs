@@ -95,7 +95,7 @@ namespace Scroto
       base.WndProc(ref m);
     }
 
-    public void Show()
+    public new void Show()
     {
       if (!Visible)
         base.Show();
