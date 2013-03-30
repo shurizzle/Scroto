@@ -75,24 +75,25 @@ namespace Scroto
 
     protected override void WndProc(ref Message m)
     {
-      if (m.Msg == Native.WM_SHOWME)
+      if (m.Msg == Process.FirstInstanceMessage)
       {
         Show();
       }
       base.WndProc(ref m);
     }
 
-    public new void Show()
+    public void Show()
     {
       if (!Visible)
         base.Show();
 
-      if (WindowState == FormWindowState.Minimized)
+      if (WindowState != FormWindowState.Normal)
         WindowState = FormWindowState.Normal;
 
-      bool top = TopMost;
+      bool topMost = TopMost;
       TopMost = true;
-      TopMost = top;
+      TopMost = topMost;
+      ForceForegroundWindow(Handle);
     }
 
     private static string GetDefaultBrowserPath()

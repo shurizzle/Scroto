@@ -1,69 +1,115 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Scroto
 {
-  public static class ProcessHelpers
-  {
-    static public IntPtr GetWindowHandle(this System.Diagnostics.Process proc)
-    {
-      IntPtr res = IntPtr.Zero;
-      Native.EnumWindows(delegate(IntPtr hWnd, IntPtr lParam)
-      {
-        uint pid = 0;
-        Native.GetWindowThreadProcessId(hWnd, out pid);
-
-        if (pid == proc.Id)
-        {
-          res = hWnd;
-          return false;
-        }
-
-        return true;
-      }, IntPtr.Zero);
-
-      return res;
-    }
-
-    static public bool IsVisible(this System.Diagnostics.Process proc)
-    {
-      Native.WINDOWINFO pwi = new Native.WINDOWINFO();
-      IntPtr handle = proc.MainWindowHandle;
-      return Native.GetWindowInfo(handle, ref pwi);
-    }
-
-    static public void Show(this System.Diagnostics.Process proc)
-    {
-      if (!proc.IsVisible())
-        Native.ShowWindow(proc.GetWindowHandle(), Native.ShowWindowCommands.Show);
-
-      Native.PostMessage(
-        new HandleRef(proc, proc.MainWindowHandle),
-        Native.WM_SHOWME,
-        IntPtr.Zero,
-        IntPtr.Zero);
-
-      Native.SetForegroundWindow(proc.MainWindowHandle);
-    }
-  }
-
   public static class Process
   {
-    static public System.Diagnostics.Process Instance
+    private static string m_AssemblyGuid = null;
+
+    public static string AssemblyGuid
     {
       get
       {
-        var current = System.Diagnostics.Process.GetCurrentProcess();
-        foreach (var process in System.Diagnostics.Process.GetProcessesByName(current.ProcessName))
+        if (m_AssemblyGuid == null)
         {
-          if (process.Id != current.Id)
+          object[] attributes = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(System.Runtime.InteropServices.GuidAttribute), false);
+          if (attributes.Length == 0)
           {
-            current = process;
-            break;
+            m_AssemblyGuid = String.Empty;
           }
+          m_AssemblyGuid = ((System.Runtime.InteropServices.GuidAttribute)attributes[0]).Value;
         }
 
-        return current;
+        return m_AssemblyGuid;
+      }
+    }
+
+    private static string m_FirstInstanceMessageName;
+
+    public static string FirstInstanceMessageName
+    {
+      get
+      {
+        if (m_FirstInstanceMessageName == null)
+        {
+          m_FirstInstanceMessageName = String.Format("WM_SHOWFIRSTINSTANCE|{0}", AssemblyGuid);
+        }
+
+        return m_FirstInstanceMessageName;
+      }
+    }
+
+    private static uint m_FirstInstanceMessage = 0;
+
+    public static uint FirstInstanceMessage
+    {
+      get
+      {
+        if (m_FirstInstanceMessage == 0)
+        {
+          m_FirstInstanceMessage = Native.RegisterWindowMessage(FirstInstanceMessageName);
+        }
+
+        return m_FirstInstanceMessage;
+      }
+    }
+
+    private static string m_MutexName = null;
+
+    public static string MutexName
+    {
+      get
+      {
+        if (m_MutexName == null)
+        {
+          m_MutexName = String.Format(@"Local\{0}", AssemblyGuid);
+        }
+
+        return m_MutexName;
+      }
+    }
+
+    private static Mutex m_Mutex = null;
+    private static bool m_OnlyInstance;
+
+    public static Mutex Mutex
+    {
+      get
+      {
+        if (m_Mutex == null)
+        {
+          m_Mutex = new Mutex(true, MutexName, out m_OnlyInstance);
+        }
+
+        return m_Mutex;
+      }
+    }
+
+    public static bool OnlyInstance
+    {
+      get
+      {
+        if (m_Mutex == null)
+        {
+          m_Mutex = new Mutex(true, MutexName, out m_OnlyInstance);
+        }
+
+        return m_OnlyInstance;
+      }
+    }
+
+    public static readonly IntPtr HWND_Broadcast = new IntPtr(0xffff);
+    public static readonly HandleRef HBroadcast = new HandleRef(null, HWND_Broadcast);
+
+    public static void ShowInstance()
+    {
+      if (!OnlyInstance)
+      {
+        Native.PostMessage(HBroadcast, FirstInstanceMessage,
+          IntPtr.Zero, IntPtr.Zero);
       }
     }
   }

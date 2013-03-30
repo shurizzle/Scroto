@@ -1,6 +1,5 @@
 ﻿using System;
 using Application = System.Windows.Forms.Application;
-using Mutex = System.Threading.Mutex;
 
 namespace Scroto
 {
@@ -12,19 +11,16 @@ namespace Scroto
     [STAThread]
     static void Main()
     {
-      bool createdNew = true;
-      var m = new Mutex(true, "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}", out createdNew);
-
-      if (createdNew)
+      if (Process.OnlyInstance)
       {
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
         Application.Run(new Scroto());
-        GC.KeepAlive(m);
+        GC.KeepAlive(Process.Mutex);
       }
       else
       {
-        Process.Instance.Show();
+        Process.ShowInstance();
       }
     }
   }
