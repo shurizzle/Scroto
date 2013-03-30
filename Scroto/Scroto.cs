@@ -20,7 +20,9 @@ namespace Scroto
   {
     static private string apiKey = "54bf7d24bb8f12f638f40c41abcd65ee";
     static private Regex ImageRe = new Regex("<original_image>(.*)</original_image>");
+
     bool forceClose = false;
+
     private Pair<bool, FormWindowState> prev = new Pair<bool, FormWindowState>();
 
     public Scroto()
@@ -74,7 +76,9 @@ namespace Scroto
     protected override void WndProc(ref Message m)
     {
       if (m.Msg == Native.WM_SHOWME)
+      {
         Show();
+      }
       base.WndProc(ref m);
     }
 
@@ -137,37 +141,47 @@ namespace Scroto
         Hooker.MouseUpEx += globalEventProvider_MouseUpEx;
         Hooker.MouseWheelEx += globalEventProvider_MouseWheelEx;
         Hooker.MouseDoubleClickEx += globalEventProvider_MouseDoubleClickEx;
+        PreShoot();
       }
       catch (Win32Exception)
       {
-        MessageBox.Show("Can't grab desktop", "Error");
+        UngrabAll();
+        GrabFailure();
       }
+    }
+
+    private void GrabFailure()
+    {
+      MessageBox.Show("Impossibile prendere il controllo del desktop", "Error");
     }
 
     private void UngrabAll()
     {
-      try
+      Action<Action> f = delegate(Action ff)
       {
-        Hooker.KeyUp -= globalEventProvider_KeyUp;
-        Hooker.KeyDown -= globalEventProvider_KeyDown;
-        Hooker.MouseDownEx -= globalEventProvider_MouseDownEx;
-        Hooker.MouseUpEx -= globalEventProvider_MouseUpEx;
-        Hooker.MouseWheelEx -= globalEventProvider_MouseWheelEx;
-        Hooker.MouseDoubleClickEx -= globalEventProvider_MouseDoubleClickEx;
-      }
-      catch (Win32Exception)
-      {
-      }
+        try
+        {
+          ff();
+        }
+        catch (Win32Exception) {}
+      };
+
+      f(() => Hooker.KeyUp -= globalEventProvider_KeyUp);
+      f(() => Hooker.KeyDown -= globalEventProvider_KeyDown);
+      f(() => Hooker.MouseDownEx -= globalEventProvider_MouseDownEx);
+      f(() => Hooker.MouseUpEx -= globalEventProvider_MouseUpEx);
+      f(() => Hooker.MouseWheelEx -= globalEventProvider_MouseWheelEx);
+      f(() => Hooker.MouseDoubleClickEx -= globalEventProvider_MouseDoubleClickEx);
     }
 
     private void globalEventProvider_KeyDown(object sender, KeyEventArgs e)
     {
+      UngrabAll();
       e.Handled = true;
     }
 
     private void globalEventProvider_KeyUp(object sender, KeyEventArgs e)
     {
-      UngrabAll();
       e.Handled = true;
     }
 
@@ -216,14 +230,17 @@ namespace Scroto
         int height = win.Second.Bottom > sz.Height ? sz.Height - Y : win.Second.Height;
         Rectangle crop = new Rectangle(X, Y, width, height);
 
-        Shooting(delegate { return UploadToImgur(TakeScreenshot(crop)); });
-
-        //MessageBox.Show(String.Format("R(P({0}, {1}), P({2}, {3})) = R(P(0, 0), P({4}, {5}))", crop.Left,
-        //  crop.Top, crop.Right, crop.Bottom, sz.Width, sz.Height));
+        Shooting(delegate { return UploadToImgur(TakeScreenshot(crop)); }, false);
       }
       else
       {
+        InputFailure();
       }
+    }
+
+    private void InputFailure()
+    {
+      MessageBox.Show("Tasto non valido", "Error");
     }
 
     private IEnumerable<IntPtr> ZOrder()
@@ -306,15 +323,20 @@ namespace Scroto
       Shooting(f, true);
     }
 
+    private void PreShoot()
+    {
+      prev.First = Visible;
+      prev.Second = WindowState;
+
+      Hide();
+      linkLabel1.Hide();
+    }
+
     private void Shooting(Func<string> f, bool hide)
     {
       if (hide)
       {
-        prev.First = Visible;
-        prev.Second = WindowState;
-
-        Hide();
-        linkLabel1.Hide();
+        PreShoot();
       }
 
       try
@@ -407,6 +429,29 @@ namespace Scroto
     private void windowToolStripMenuItem_Click(object sender, EventArgs e)
     {
       GrabAll();
+    }
+
+    private void button3_Click(object sender, EventArgs e)
+    {
+      Crop();
+    }
+
+    private void cropToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      Crop();
+    }
+
+    private void Crop()
+    {
+      PreShoot();
+      Cropper cropper = new Cropper();
+      cropper.OnSuccess += delegate(Rectangle r)
+      {
+        Shooting(delegate { return UploadToImgur(TakeScreenshot(r)); }, false);
+      };
+      cropper.OnHookFailure += GrabFailure;
+      cropper.OnInputFailure += InputFailure;
+      cropper.Run();
     }
   }
 }
