@@ -25,9 +25,19 @@ namespace Scroto
 
     private Pair<bool, FormWindowState> prev = new Pair<bool, FormWindowState>();
 
-    public Scroto()
+    public Scroto(bool quiet)
     {
       InitializeComponent();
+
+      if (quiet)
+      {
+        Show();
+        Hide();
+      }
+      else
+      {
+        Show();
+      }
     }
 
     protected override void OnFormClosing(FormClosingEventArgs e)
@@ -35,7 +45,10 @@ namespace Scroto
       base.OnFormClosing(e);
 
       if (e.CloseReason == CloseReason.WindowsShutDown ||
-        forceClose) return;
+        forceClose)
+      {
+        return;
+      }
 
       Hide();
       e.Cancel = true;
@@ -453,6 +466,11 @@ namespace Scroto
       cropper.OnHookFailure += GrabFailure;
       cropper.OnInputFailure += InputFailure;
       cropper.Run();
+    }
+
+    private void Scroto_FormClosed(object sender, FormClosedEventArgs e)
+    {
+      Application.ExitThread();
     }
   }
 }

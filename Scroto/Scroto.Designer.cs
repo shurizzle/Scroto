@@ -35,11 +35,11 @@
       this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
       this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.shootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.cropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.esciToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.button2 = new System.Windows.Forms.Button();
       this.button3 = new System.Windows.Forms.Button();
-      this.cropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.contextMenuStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -89,26 +89,33 @@
             this.windowToolStripMenuItem,
             this.esciToolStripMenuItem});
       this.contextMenuStrip1.Name = "contextMenuStrip1";
-      this.contextMenuStrip1.Size = new System.Drawing.Size(153, 114);
+      this.contextMenuStrip1.Size = new System.Drawing.Size(119, 92);
       // 
       // shootToolStripMenuItem
       // 
       this.shootToolStripMenuItem.Name = "shootToolStripMenuItem";
-      this.shootToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.shootToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
       this.shootToolStripMenuItem.Text = "Shoot!";
       this.shootToolStripMenuItem.Click += new System.EventHandler(this.shootToolStripMenuItem_Click);
+      // 
+      // cropToolStripMenuItem
+      // 
+      this.cropToolStripMenuItem.Name = "cropToolStripMenuItem";
+      this.cropToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+      this.cropToolStripMenuItem.Text = "Crop";
+      this.cropToolStripMenuItem.Click += new System.EventHandler(this.cropToolStripMenuItem_Click);
       // 
       // windowToolStripMenuItem
       // 
       this.windowToolStripMenuItem.Name = "windowToolStripMenuItem";
-      this.windowToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.windowToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
       this.windowToolStripMenuItem.Text = "Window";
       this.windowToolStripMenuItem.Click += new System.EventHandler(this.windowToolStripMenuItem_Click);
       // 
       // esciToolStripMenuItem
       // 
       this.esciToolStripMenuItem.Name = "esciToolStripMenuItem";
-      this.esciToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.esciToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
       this.esciToolStripMenuItem.Text = "Esci";
       this.esciToolStripMenuItem.Click += new System.EventHandler(this.esciToolStripMenuItem_Click);
       // 
@@ -132,13 +139,6 @@
       this.button3.UseVisualStyleBackColor = true;
       this.button3.Click += new System.EventHandler(this.button3_Click);
       // 
-      // cropToolStripMenuItem
-      // 
-      this.cropToolStripMenuItem.Name = "cropToolStripMenuItem";
-      this.cropToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.cropToolStripMenuItem.Text = "Crop";
-      this.cropToolStripMenuItem.Click += new System.EventHandler(this.cropToolStripMenuItem_Click);
-      // 
       // Scroto
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -155,6 +155,7 @@
       this.Opacity = 0.8D;
       this.ShowIcon = false;
       this.Text = "Scroto";
+      this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Scroto_FormClosed);
       this.contextMenuStrip1.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
