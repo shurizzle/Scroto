@@ -59,7 +59,7 @@ namespace Scroto
       e.Cancel = true;
     }
 
-    protected void ForceClose()
+    public void ForceClose()
     {
       forceClose = true;
       Close();
@@ -488,6 +488,11 @@ namespace Scroto
       {
         Autostart.Enable();
       }
+    }
+
+    private void esciToolStripMenuItem1_Click(object sender, EventArgs e)
+    {
+      ForceClose();
     }
   }
 }

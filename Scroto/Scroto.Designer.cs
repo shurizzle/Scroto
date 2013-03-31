@@ -43,6 +43,7 @@
       this.menuStrip1 = new System.Windows.Forms.MenuStrip();
       this.opzioniToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.autostartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.esciToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.contextMenuStrip1.SuspendLayout();
       this.menuStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -158,7 +159,8 @@
       // opzioniToolStripMenuItem
       // 
       this.opzioniToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.autostartToolStripMenuItem});
+            this.autostartToolStripMenuItem,
+            this.esciToolStripMenuItem1});
       this.opzioniToolStripMenuItem.Name = "opzioniToolStripMenuItem";
       this.opzioniToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
       this.opzioniToolStripMenuItem.Text = "Opzioni";
@@ -171,6 +173,13 @@
       this.autostartToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.autostartToolStripMenuItem.Text = "Autostart";
       this.autostartToolStripMenuItem.CheckedChanged += new System.EventHandler(this.autostartToolStripMenuItem_CheckedChanged);
+      // 
+      // esciToolStripMenuItem1
+      // 
+      this.esciToolStripMenuItem1.Name = "esciToolStripMenuItem1";
+      this.esciToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+      this.esciToolStripMenuItem1.Text = "Esci";
+      this.esciToolStripMenuItem1.Click += new System.EventHandler(this.esciToolStripMenuItem1_Click);
       // 
       // Scroto
       // 
@@ -213,6 +222,7 @@
     private System.Windows.Forms.MenuStrip menuStrip1;
     private System.Windows.Forms.ToolStripMenuItem opzioniToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem autostartToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem esciToolStripMenuItem1;
   }
 }
 
