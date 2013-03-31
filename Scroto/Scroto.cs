@@ -29,6 +29,11 @@ namespace Scroto
     {
       InitializeComponent();
 
+      if (Autostart.IsEnabled)
+      {
+        autostartToolStripMenuItem.Checked = true;
+      }
+
       if (quiet)
       {
         Show();
@@ -471,6 +476,18 @@ namespace Scroto
     private void Scroto_FormClosed(object sender, FormClosedEventArgs e)
     {
       Application.ExitThread();
+    }
+
+    private void autostartToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+    {
+      if (Autostart.IsEnabled)
+      {
+        Autostart.Disable();
+      }
+      else
+      {
+        Autostart.Enable();
+      }
     }
   }
 }

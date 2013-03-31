@@ -12,7 +12,7 @@ namespace Scroto
     [STAThread]
     static void Main(string[] args)
     {
-      bool quiet = args.Any(x => x == "/q" || x == "/quiet");
+      bool quiet = args.Any(x => x == "/q" || x == "/quiet" || x == "/autostart");
 
       if (Process.OnlyInstance)
       {
